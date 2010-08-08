@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shooter</title>
+    <style type="text/css">
+	body{
+	
+	}
+	#screen{
+		width:410px;
+		height:510px;
+		padding:25px 50px 40px 50px;
+		margin:40px auto 0 auto;
+		border:solid 3px #000;
+		background:#EEF;
+		-webkit-border-radius: 40px;
+		-moz-border-radius: 40px;
+	}
+	#area{
+		border:inset 5px #999;
+		background:#000
+	}
+	#scrBut{
+		float:right;
+	}
+	#comp{
+		width:510px;
+		height:200px;
+		margin:0px auto;
+		border:solid 3px #000;
+		background:#EEF;
+		-webkit-border-radius: 40px;
+		-moz-border-radius: 40px;
+	}
+	</style>
+<script type="text/javascript">
+var area;
+var ctx;
+var areaScrBut;
+var ctxScrBut;
+var scrButOn = false;
+
+
+var ship = new sprite(200,120,"Player",10,10,3,0);
+function sprite(x,y,shape,firepower,health,velx,vely){ 
+	this.x = x;
+	this.y = y;
+	this.vel = {
+		x : velx,
+		y : vely
+	}
+	this.firepower = firepower;
+	this.health = health;
+	this.shape = shape;
+	this.draw = draw;
+}
+function draw(){
+ 
+	with (this) if(shape=="Player"){
+		with (this) ctx.beginPath();
+		with (this) ctx.strokeStyle = "#0F0";
+		with (this) ctx.lineWidth = 2;
+		with (this) ctx.moveTo(x,y);
+		with (this) ctx.lineTo(x+10,y+30);
+		with (this) ctx.lineTo(x,y+25);
+		with (this) ctx.lineTo(x-10,y+30);
+		with (this) ctx.closePath();
+		ctx.stroke();
+		
+	}
+}
+function toggleScrBut(){
+	if(scrButOn){
+		scrButOn = false;
+	}else{
+		scrButOn = true;
+	}
+	ctxScrBut.clearRect(0,0,100,30);
+	ctxScrBut.beginPath();
+	ctxScrBut.strokeStyle = "#333";
+	ctxScrBut.fillStyle = "#DDD";
+	ctxScrBut.arc(45,15,14,0,Math.PI*2,true);
+	ctxScrBut.fill();
+	ctxScrBut.beginPath();
+	ctxScrBut.strokeStyle = "#000";
+	ctxScrBut.arc(45,15,8,Math.PI*1.35,Math.PI*1.65,true);
+	ctxScrBut.moveTo(45,4);
+	ctxScrBut.stroke();
+	ctxScrBut.beginPath();
+	ctxScrBut.moveTo(45,4);
+	ctxScrBut.lineTo(45,17);
+	ctxScrBut.stroke();
+	if(scrButOn){
+		ctxScrBut.fillStyle = "#0F0";
+		
+	}else{
+		ctxScrBut.fillStyle = "#F00";
+	}
+	ctxScrBut.fillRect(1,10,20,10);
+    ctxScrBut.strokeRect(1,10,20,10);  
+}
+
+function update(){
+	ctx.clearRect(0,0,400,500);
+	if(scrButOn || compButOn){
+		ship.vel.x+=(200-ship.x)/1000;
+		ship.vel.y+=(200-ship.y)/1000;
+		ship.x+=ship.vel.x;
+		ship.y+=ship.vel.y;
+		
+		ship.draw();
+	}
+}
+function init(){
+	area = document.getElementById("area");
+	ctx = area.getContext("2d");
+	areaScrBut = document.getElementById("scrBut");
+	ctxScrBut = areaScrBut.getContext("2d");
+	
+	
+	toggleScrBut();
+	setInterval(update,10);
+
+}
+</script>
+</head>
+
+<body onload="init();" onkeydown="return ev_keyud(event,true);" onkeyup="return ev_keyud(event,false);">
+<div id="screen">
+<canvas id="area" width="400" height="500">
+<p>Your browser is too old to view this page.</p>
+<p>Please upgrade to either
+<a href="http://google.com/chrome">Google Chrome</a>
+or
+<a href="http://google.com/chrome">Mozilla Firefox</a></p>
+</canvas>
+<canvas id="scrBut" width="60" height="30" onClick="toggleScrBut()"></canvas>
+</div>
+</body>
