@@ -60,19 +60,40 @@ var key = {
 function keyDown(e){
 	var unicode=e.keyCode? e.keyCode : e.charCode
 	if(unicode==38){
-		alert("up");
+		key.up = true;
 	}
 	if(unicode==40){
-		alert("down");
+		key.down = true;
 	}
 	if(unicode==37){
-		alert("left");
+		key.left = true;
 	}
 	if(unicode==39){
-		alert("right");
+		key.right = true;
+	}
+	if(unicode==32){
+		key.space = true;
 	}
 }
-var ship = new sprite(200,10,"Player",10,10,15,0);
+function keyUp(e){
+	var unicode=e.keyCode? e.keyCode : e.charCode
+	if(unicode==38){
+		key.up = false;
+	}
+	if(unicode==40){
+		key.down = false;
+	}
+	if(unicode==37){
+		key.left = false;
+	}
+	if(unicode==39){
+		key.right = false;
+	}
+	if(unicode==32){
+		key.space = false;
+	}
+}
+var ship = new sprite(200,10,"Player",2,10,15,0);
 function sprite(x,y,shape,firepower,health,velx,vely){ 
 	this.x = x;
 	this.y = y;
@@ -84,6 +105,7 @@ function sprite(x,y,shape,firepower,health,velx,vely){
 	this.health = health;
 	this.shape = shape;
 	this.draw = draw;
+	this.fire = fire;
 }
 function draw(){
 	with (this) if(shape=="Player"){
@@ -98,6 +120,15 @@ function draw(){
 		ctx.stroke();
 		
 	}
+}
+function fire(){
+	with (this) {ctx.beginPath();
+		ctx.strokeStyle = "#F00";
+		ctx.lineWidth = 2;
+		ctx.moveTo(x,y);
+		ctx.lineTo(x,y-30);
+		ctx.stroke();}
+		return
 }
 function toggleScrBut(){
 	if(scrButOn){
@@ -133,8 +164,17 @@ function toggleScrBut(){
 function update(){
 	ctx.clearRect(0,0,400,500);
 	if(scrButOn || compButOn){
-		ship.vel.x+=(200-ship.x)/100;
-		ship.vel.y+=(200-ship.y)/1000;
+		ship.vel.x*=0.8
+		ship.vel.y*=0.8
+		if(key.up){ship.vel.y-=1;}
+		if(key.down){ship.vel.y+=1;}
+		if(key.left){ship.vel.x-=1;}
+		if(key.right){ship.vel.x+=1;}
+		if(key.space){ship.fire();}
+		
+		if(ship.x>390||ship.x<10){ship.vel.x=-ship.vel.x;}
+		if(ship.y>470||ship.y<0){ship.vel.y=-ship.vel.y;}
+		
 		ship.x+=ship.vel.x;
 		ship.y+=ship.vel.y;
 		
@@ -155,7 +195,7 @@ function init(){
 </script>
 </head>
 
-<body onload="init();" onkeydown="keyDown(event);" onkeyup="keyUp(event);">
+<body onload="init();" onkeydown="keyDown(event); if((event.keyCode==37)||(event.keyCode==38)||(event.keyCode==39)||(event.keyCode==40)||(event.keyCode==32)){return false;}" onkeyup="keyUp(event);">
 <div id="screen">
 <canvas id="area" width="400" height="500">
 <p>Your browser is too old to view this page.</p>
