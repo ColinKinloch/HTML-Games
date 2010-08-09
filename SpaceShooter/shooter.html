@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+	<link rel="shortcut icon" href="favicon.ico" />
     <title>Shooter</title>
     <style type="text/css">
 	body{
@@ -19,7 +20,9 @@
 	}
 	#area{
 		border:inset 5px #999;
-		background:#000
+		background:#000;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
 	}
 	#scrBut{
 		float:right;
@@ -40,9 +43,36 @@ var ctx;
 var areaScrBut;
 var ctxScrBut;
 var scrButOn = false;
-
-
-var ship = new sprite(200,120,"Player",10,10,3,0);
+var key = {
+	up : false,
+	down : false,
+	left : false,
+	right : false,
+	w : false,
+	s : false,
+	a : false,
+	d : false,
+	
+	z : false,
+	x : false,
+	c : false
+}
+function keyDown(e){
+	var unicode=e.keyCode? e.keyCode : e.charCode
+	if(unicode==38){
+		alert("up");
+	}
+	if(unicode==40){
+		alert("down");
+	}
+	if(unicode==37){
+		alert("left");
+	}
+	if(unicode==39){
+		alert("right");
+	}
+}
+var ship = new sprite(200,10,"Player",10,10,15,0);
 function sprite(x,y,shape,firepower,health,velx,vely){ 
 	this.x = x;
 	this.y = y;
@@ -56,16 +86,15 @@ function sprite(x,y,shape,firepower,health,velx,vely){
 	this.draw = draw;
 }
 function draw(){
- 
 	with (this) if(shape=="Player"){
-		with (this) ctx.beginPath();
-		with (this) ctx.strokeStyle = "#0F0";
-		with (this) ctx.lineWidth = 2;
-		with (this) ctx.moveTo(x,y);
-		with (this) ctx.lineTo(x+10,y+30);
-		with (this) ctx.lineTo(x,y+25);
-		with (this) ctx.lineTo(x-10,y+30);
-		with (this) ctx.closePath();
+		ctx.beginPath();
+		ctx.strokeStyle = "#0F0";
+		ctx.lineWidth = 2;
+		ctx.moveTo(x,y);
+		ctx.lineTo(x+10,y+30);
+		ctx.lineTo(x,y+25);
+		ctx.lineTo(x-10,y+30);
+		ctx.closePath();
 		ctx.stroke();
 		
 	}
@@ -104,7 +133,7 @@ function toggleScrBut(){
 function update(){
 	ctx.clearRect(0,0,400,500);
 	if(scrButOn || compButOn){
-		ship.vel.x+=(200-ship.x)/1000;
+		ship.vel.x+=(200-ship.x)/100;
 		ship.vel.y+=(200-ship.y)/1000;
 		ship.x+=ship.vel.x;
 		ship.y+=ship.vel.y;
@@ -126,7 +155,7 @@ function init(){
 </script>
 </head>
 
-<body onload="init();" onkeydown="return ev_keyud(event,true);" onkeyup="return ev_keyud(event,false);">
+<body onload="init();" onkeydown="keyDown(event);" onkeyup="keyUp(event);">
 <div id="screen">
 <canvas id="area" width="400" height="500">
 <p>Your browser is too old to view this page.</p>
@@ -135,6 +164,6 @@ function init(){
 or
 <a href="http://google.com/chrome">Mozilla Firefox</a></p>
 </canvas>
-<canvas id="scrBut" width="60" height="30" onClick="toggleScrBut()"></canvas>
+<canvas id="scrBut" width="60" height="30"></canvas>
 </div>
 </body>
