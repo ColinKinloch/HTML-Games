@@ -170,14 +170,17 @@ function update(){
 		if(key.down){ship.vel.y+=1;}
 		if(key.left){ship.vel.x-=1;}
 		if(key.right){ship.vel.x+=1;}
-		if(key.space){ship.fire();}
 		
-		if(ship.x>390||ship.x<10){ship.vel.x=-ship.vel.x;}
-		if(ship.y>470||ship.y<0){ship.vel.y=-ship.vel.y;}
 		
 		ship.x+=ship.vel.x;
 		ship.y+=ship.vel.y;
 		
+		if(ship.x>388){ship.x=388;ship.vel.x=0;}
+		if(ship.x<13){ship.x=13;ship.vel.x=0;}
+		if(ship.y>468){ship.y=468;ship.vel.y=0;}
+		if(ship.y<3){ship.y=3;ship.vel.y=0;}
+		
+		if(key.space){ship.fire();}
 		ship.draw();
 	}
 }
